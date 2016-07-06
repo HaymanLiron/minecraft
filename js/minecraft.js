@@ -5,7 +5,7 @@
 var minecraft = {};
 //20 x 20 matrix
 
-minecraft.backgroundimages = {
+minecraft.backgroundimages = { //object containing all the type of backgrounds to use for the minecraft board
     "sky": "./images/sky.png",
     "cloud": "./images/cloud.jpg",
     "leaf": "./images/leaf.jpg",
@@ -76,7 +76,7 @@ minecraft.clickOnBoardSquare = function () {
 
 minecraft.clickOnUserButton = function () {
     minecraft.currentUserButton = $(this);
-}
+};
 
 minecraft.createBoard = function () {
     //create the board in javascript
@@ -105,7 +105,7 @@ minecraft.createButtons = function () {
         userButton.on('click', minecraft.clickOnUserButton);
         userButton.addClass("userButton");
         //iterate through keys and add this data to the HTML element
-        for (var keys in minecraft.userButtons[i]) {
+        for (var keys in minecraft.userButtons[i]) { //keys is the property of the object we are aiming
             if (minecraft.userButtons[i].hasOwnProperty(keys)) {
                 //add the key and value as information that the HTML element holds
                 userButton.data(keys, minecraft.userButtons[i][keys]);
