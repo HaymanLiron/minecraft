@@ -6,9 +6,9 @@
 
 .boardSquare {
     display: inline-block;
-    height: 60px;
-    width: 60px;
-    border: 1px solid black;
+    height: 20px;
+    width: 20px;
     margin-top: -2px;
     margin-bottom: -2px;
+    background-size: cover;
 }
