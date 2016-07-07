@@ -1,0 +1,12 @@
+.main-stripe {
+    background-image: url("../images/minecraftWallpaper.jpg");
+    background-size: contain;
+    height: 500px;
+    width: 100%;
+}
+
+
+.header-logo {
+    height: 30px;
+    width: auto;
+}

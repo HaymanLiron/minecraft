@@ -64,6 +64,17 @@ minecraft.userButtons = [
 
 minecraft.currentUserButton = "";
 
+minecraft.getSquareFeatureGivenImageURL= function(imageURL) {
+    //this function finds the key in minecraft.backgroundimages for a given imageURL
+    for (var keys in minecraft.backgroundimages){
+        if (minecraft.backgroundimages[keys] === imageURL){
+            return keys;
+        }
+    }
+    return null;
+};
+
+
 minecraft.clickOnBoardSquare = function () {
 
     if (minecraft.currentUserButton.data("toolName") !== 'lastUsed') { //means that the user has clicked on a tool
@@ -72,19 +83,49 @@ minecraft.clickOnBoardSquare = function () {
         var squareType = $(this).data("squareFeature");
         if (worksForArray.indexOf(squareType) !== -1) {
             //the tool works on this square
+            var flashBackground = setInterval(function(){
+                minecraft.currentUserButton.addClass("blue-background");
+                setTimeout(function() {
+                    minecraft.currentUserButton.removeClass("blue-background");
+                }, 200);
+            }, 400);
+            setTimeout(function(){
+                clearInterval(flashBackground);
+            }, 1200);
+
+
+
 
             $(".userButtonContainer .userButton:last-child").css("background-image", "url(" + minecraft.backgroundimages[squareType] + ")");
             $(".userButtonContainer .userButton:last-child").data('image', minecraft.backgroundimages[squareType]);
 
             $(this).css("background-image", "url(./images/sky.png)");
             $(this).data("squareFeature", "sky");
+        } else {
+
+
+            flashBackground = setInterval(function(){
+                minecraft.currentUserButton.addClass("red-background");
+                setTimeout(function() {
+                    minecraft.currentUserButton.removeClass("red-background");
+                }, 200);
+            }, 400);
+            setTimeout(function(){
+                clearInterval(flashBackground);
+            }, 1200);
         }
     } else { //user has clicked on lastUsed square
         // change board square to lastUsed
+
         if ($(".userButtonContainer .userButton:last-child").data('image') !== "") {
             $(this).css("background-image", 'url(' + minecraft.currentUserButton.data('image') + ')');
+
+            //we need to update the "squareFeature" data to its new value now
+            $(this).data("squareFeature", minecraft.getSquareFeatureGivenImageURL(minecraft.currentUserButton.data('image')));
             $(".userButtonContainer .userButton:last-child").css("background-image", "");
             $(".userButtonContainer .userButton:last-child").data('image', "");
+
+
         }
 
 
