@@ -4,6 +4,10 @@
     border: 0;
 }
 
+.header-image {
+    height: 50px;
+}
+
 .boardSquare {
     display: inline-block;
     height: 30px;
