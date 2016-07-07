@@ -15,7 +15,7 @@ minecraft.backgroundimages = { //object containing all the type of backgrounds t
     "dirt": "./images/dirt.png"
 };
 
-minecraft.board = [
+minecraft.board = [ //matrice holding all of the information of the board. Use this to create the board
     ["sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky"],
     ["sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky"],
     ["sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky"],
@@ -80,7 +80,7 @@ minecraft.clickOnBoardSquare = function () {
             $(this).data("squareFeature", "sky");
         }
     } else { //user has clicked on lastUsed square
-        //TODO: change board square to lastUsed
+        // change board square to lastUsed
         if ($(".userButtonContainer .userButton:last-child").data('image') !== "") {
             $(this).css("background-image", 'url(' + minecraft.currentUserButton.data('image') + ')');
             $(".userButtonContainer .userButton:last-child").css("background-image", "");
