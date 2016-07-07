@@ -174,6 +174,9 @@ minecraft.createButtons = function () {
         userButton.css("background-image", "url(" + minecraft.userButtons[i]["image"] + ")");
         $('.userButtonContainer').append(userButton);
     }
+    //initialise the currentUserButton to be the lastUsed tile
+    //this is done to prevent some bugs
+    minecraft.currentUserButton = $(".userButtonContainer .userButton:last-child");
 };
 
 minecraft.createBoard();
