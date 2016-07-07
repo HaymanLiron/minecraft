@@ -138,6 +138,7 @@ minecraft.clickOnUserButton = function () {
     minecraft.currentUserButton = $(this);
 };
 
+
 minecraft.createBoard = function () {
     //create the board by iterating through the predefined matrix
     for (var i = 0; i < minecraft.board.length; i++) {
@@ -179,8 +180,6 @@ minecraft.createButtons = function () {
     minecraft.currentUserButton = $(".userButtonContainer .userButton:last-child");
 };
 
-minecraft.createBoard();
-minecraft.createButtons();
 
 
 
