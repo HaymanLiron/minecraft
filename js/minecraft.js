@@ -65,13 +65,32 @@ minecraft.userButtons = [
 minecraft.currentUserButton = "";
 
 minecraft.clickOnBoardSquare = function () {
-    //check if appropriate tool has been selected
-    var worksForArray = minecraft.currentUserButton.data("worksFor");
-    var squareType = $(this).data("squareFeature");
-    if (worksForArray.indexOf(squareType) !== -1){
-        //the tool works on this square
-        //TODO: add appropriate functionality
+
+    if (minecraft.currentUserButton.data("toolName") !== 'lastUsed') { //means that the user has clicked on a tool
+        //check if appropriate tool has been selected
+        var worksForArray = minecraft.currentUserButton.data("worksFor");
+        var squareType = $(this).data("squareFeature");
+        if (worksForArray.indexOf(squareType) !== -1) {
+            //the tool works on this square
+
+            $(".userButtonContainer .userButton:last-child").css("background-image", "url(" + minecraft.backgroundimages[squareType] + ")");
+            $(".userButtonContainer .userButton:last-child").data('image', minecraft.backgroundimages[squareType]);
+
+            $(this).css("background-image", "url(./images/sky.png)");
+            $(this).data("squareFeature", "sky");
+        }
+    } else { //user has clicked on lastUsed square
+        //TODO: change board square to lastUsed
+        if ($(".userButtonContainer .userButton:last-child").data('image') !== "") {
+            $(this).css("background-image", 'url(' + minecraft.currentUserButton.data('image') + ')');
+            $(".userButtonContainer .userButton:last-child").css("background-image", "");
+            $(".userButtonContainer .userButton:last-child").data('image', "");
+        }
+
+
     }
+
+
 };
 
 minecraft.clickOnUserButton = function () {
@@ -79,10 +98,10 @@ minecraft.clickOnUserButton = function () {
 };
 
 minecraft.createBoard = function () {
-    //create the board in javascript
+    //create the board by iterating through the predefined matrix
     for (var i = 0; i < minecraft.board.length; i++) {
         for (var j = 0; j < minecraft.board[i].length; j++) {
-            //create div
+            //create a div for the current square in the matrix
             var boardSquare = $("<div/>");
             boardSquare.on('click', minecraft.clickOnBoardSquare);
             boardSquare.addClass("boardSquare");
@@ -90,7 +109,7 @@ minecraft.createBoard = function () {
             boardSquare.css("background-image", "url(" + minecraft.backgroundimages[minecraft.board[i][j]] + ")");
             $('.boardContainer').append(boardSquare);
         }
-        //add new line
+        //add new line so that next loop starts on new line
         $(".boardContainer").append($("<br/>"));
     }
 };
@@ -106,10 +125,10 @@ minecraft.createButtons = function () {
         userButton.addClass("userButton");
         //iterate through keys and add this data to the HTML element
         for (var keys in minecraft.userButtons[i]) { //keys is the property of the object we are aiming
-            if (minecraft.userButtons[i].hasOwnProperty(keys)) {
-                //add the key and value as information that the HTML element holds
-                userButton.data(keys, minecraft.userButtons[i][keys]);
-            }
+
+            //add the key and value as information that the HTML element holds
+            userButton.data(keys, minecraft.userButtons[i][keys]);
+
         }
         userButton.css("background-image", "url(" + minecraft.userButtons[i]["image"] + ")");
         $('.userButtonContainer').append(userButton);
@@ -118,3 +137,6 @@ minecraft.createButtons = function () {
 
 minecraft.createBoard();
 minecraft.createButtons();
+
+
+
