@@ -180,6 +180,14 @@ minecraft.createButtons = function () {
     minecraft.currentUserButton = $(".userButtonContainer .userButton:last-child");
 };
 
+minecraft.init = function(){
+    $(document).ready(function(){
+        minecraft.createBoard();
+        minecraft.createButtons();
+    });
+}
+
+minecraft.init();
 
 
 
