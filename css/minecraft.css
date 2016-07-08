@@ -26,6 +26,11 @@
     border: 2px black solid;
 }
 
+
+/* the way this works is that the corner of the borders
+gets equally divided between its two edges
+so we can abuse this to create triangles
+*/
 .tutorial-bubble:after {
     content: "";
     display: block;
@@ -35,7 +40,7 @@
     width: 0;
     border-width: 10px 0 10px 10px;
     border-style: solid;
-    border-color: transparent black;
+    border-color: transparent black; /*top and bottom border are transparent, left and right are black*/
 }
 
 

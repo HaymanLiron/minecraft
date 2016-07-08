@@ -180,9 +180,8 @@ minecraft.createButtons = function () {
 };
 
 minecraft.runTutorial = function () {
-    //first try and append an explanation next to the currently selected userButton
     var tutorialBubble = $("<div/>");
-    tutorialBubble.text("This is working");
+    tutorialBubble.text("Select a tool");
     tutorialBubble.addClass("tutorial-bubble");
     minecraft.currentUserButton.append(tutorialBubble);
 };
