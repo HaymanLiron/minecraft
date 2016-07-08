@@ -32,6 +32,10 @@
     background-color: blue;
 }
 
+.gray-background {
+    background-color: lightgray;
+}
+
 @media screen and (max-width: 768px){
     .boardSquare {
         height: 10px;

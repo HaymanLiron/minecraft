@@ -1,10 +1,7 @@
-/**
- * Created by itc_user on 7/5/2016.
- */
-
+//namespace for game
 var minecraft = {};
-//20 x 20 matrix
 
+//background images for board
 minecraft.backgroundimages = { //object containing all the type of backgrounds to use for the minecraft board
     "sky": "./images/sky.png",
     "cloud": "./images/cloud.jpg",
@@ -15,6 +12,7 @@ minecraft.backgroundimages = { //object containing all the type of backgrounds t
     "dirt": "./images/dirt.png"
 };
 
+//matrix used to create the board
 minecraft.board = [ //matrice holding all of the information of the board. Use this to create the board
     ["sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky"],
     ["sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky", "sky"],
@@ -38,6 +36,7 @@ minecraft.board = [ //matrice holding all of the information of the board. Use t
     ["dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt"]
 ];
 
+//array that contains the buttons the user can press and relevant info about them
 minecraft.userButtons = [
     {
         'toolName': 'pickAxe',
@@ -61,11 +60,12 @@ minecraft.userButtons = [
     }
 ];
 
-
+//variable to know the last button the user has pressed
 minecraft.currentUserButton = "";
 
 minecraft.getSquareFeatureGivenImageURL= function(imageURL) {
     //this function finds the key in minecraft.backgroundimages for a given imageURL
+    //i.e. given a value in that object, it finds the relevant key
     for (var keys in minecraft.backgroundimages){
         if (minecraft.backgroundimages[keys] === imageURL){
             return keys;
@@ -74,73 +74,73 @@ minecraft.getSquareFeatureGivenImageURL= function(imageURL) {
     return null;
 };
 
+minecraft.flashSquare = function (square, colorClass) {
+    //this function: if clicking on a square works, then get the appropriate user button to flash blue
+    //if it doesn't work, get the button to flash red
+
+    //need to remove any classes which have already changed the background color
+    square.removeClass("gray-background");
+    //setInterval function that changes the background color
+    var flashBackground = setInterval(function(){
+        square.addClass(colorClass);
+        //a timeout function to remove that background color
+        setTimeout(function() {
+            square.removeClass(colorClass);
+        }, 200);
+    }, 400);
+    //a timeout function to turn off this flashing
+    setTimeout(function(){
+        clearInterval(flashBackground);
+        //safety feature to make sure background doesn't stay red or blue
+        square.removeClass(colorClass);
+        //we use minecraft.currentUserButton in the next line, and not square variable
+        //to account for an edge case
+        minecraft.currentUserButton.addClass("gray-background");
+    }, 1200);
+};
 
 minecraft.clickOnBoardSquare = function () {
-
+    //function that handles if a user clicks on a square inside the board
+    var lastUsedSquare = $(".userButtonContainer .userButton:last-child");
     if (minecraft.currentUserButton.data("toolName") !== 'lastUsed') { //means that the user has clicked on a tool
         //check if appropriate tool has been selected
         var worksForArray = minecraft.currentUserButton.data("worksFor");
         var squareType = $(this).data("squareFeature");
+
         if (worksForArray.indexOf(squareType) !== -1) {
             //the tool works on this square
-            var flashBackground = setInterval(function(){
-                minecraft.currentUserButton.addClass("blue-background");
-                setTimeout(function() {
-                    minecraft.currentUserButton.removeClass("blue-background");
-                }, 200);
-            }, 400);
-            setTimeout(function(){
-                clearInterval(flashBackground);
-            }, 1200);
+            minecraft.flashSquare(minecraft.currentUserButton, "blue-background");
 
-
-
-
-            $(".userButtonContainer .userButton:last-child").css("background-image", "url(" + minecraft.backgroundimages[squareType] + ")");
-            $(".userButtonContainer .userButton:last-child").data('image', minecraft.backgroundimages[squareType]);
-
+            lastUsedSquare.css("background-image", "url(" + minecraft.backgroundimages[squareType] + ")");
+            lastUsedSquare.data('image', minecraft.backgroundimages[squareType]);
             $(this).css("background-image", "url(./images/sky.png)");
             $(this).data("squareFeature", "sky");
-        } else {
-
-
-            flashBackground = setInterval(function(){
-                minecraft.currentUserButton.addClass("red-background");
-                setTimeout(function() {
-                    minecraft.currentUserButton.removeClass("red-background");
-                }, 200);
-            }, 400);
-            setTimeout(function(){
-                clearInterval(flashBackground);
-            }, 1200);
+        } else { //tool does not work on this square
+            minecraft.flashSquare(minecraft.currentUserButton, "red-background");
         }
     } else { //user has clicked on lastUsed square
         // change board square to lastUsed
-
-        if ($(".userButtonContainer .userButton:last-child").data('image') !== "") {
+        if (lastUsedSquare.data('image') !== "") {
             $(this).css("background-image", 'url(' + minecraft.currentUserButton.data('image') + ')');
 
             //we need to update the "squareFeature" data to its new value now
             $(this).data("squareFeature", minecraft.getSquareFeatureGivenImageURL(minecraft.currentUserButton.data('image')));
-            $(".userButtonContainer .userButton:last-child").css("background-image", "");
-            $(".userButtonContainer .userButton:last-child").data('image', "");
-
-
+            lastUsedSquare.css("background-image", "");
+            lastUsedSquare.data('image', "");
         }
-
-
     }
-
-
 };
 
 minecraft.clickOnUserButton = function () {
+    //function that handles if the user clicks on a button
+    minecraft.currentUserButton.removeClass("gray-background");
     minecraft.currentUserButton = $(this);
+    $(this).addClass("gray-background");
 };
-
 
 minecraft.createBoard = function () {
     //create the board by iterating through the predefined matrix
+    var boardContainer = $(".boardContainer");
     for (var i = 0; i < minecraft.board.length; i++) {
         for (var j = 0; j < minecraft.board[i].length; j++) {
             //create a div for the current square in the matrix
@@ -149,13 +149,12 @@ minecraft.createBoard = function () {
             boardSquare.addClass("boardSquare");
             boardSquare.data("squareFeature", minecraft.board[i][j]);
             boardSquare.css("background-image", "url(" + minecraft.backgroundimages[minecraft.board[i][j]] + ")");
-            $('.boardContainer').append(boardSquare);
+            boardContainer.append(boardSquare);
         }
         //add new line so that next loop starts on new line
-        $(".boardContainer").append($("<br/>"));
+        boardContainer.append($("<br/>"));
     }
 };
-
 
 minecraft.createButtons = function () {
     //create buttons that the user uses to change the board
@@ -185,7 +184,7 @@ minecraft.init = function(){
         minecraft.createBoard();
         minecraft.createButtons();
     });
-}
+};
 
 minecraft.init();
 
