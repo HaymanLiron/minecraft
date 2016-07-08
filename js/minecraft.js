@@ -179,6 +179,14 @@ minecraft.createButtons = function () {
     minecraft.currentUserButton = $(".userButtonContainer .userButton:last-child");
 };
 
+minecraft.runTutorial = function () {
+    //first try and append an explanation next to the currently selected userButton
+    var tutorialBubble = $("<div/>");
+    tutorialBubble.text("This is working");
+    tutorialBubble.addClass("tutorial-bubble");
+    minecraft.currentUserButton.append(tutorialBubble);
+};
+
 minecraft.init = function(){
     $(document).ready(function(){
         minecraft.createBoard();

@@ -17,7 +17,32 @@
     background-size: cover;
 }
 
+.tutorial-bubble {
+    position: absolute;
+    right: 150px;
+    top: 50px;
+    width: 150px;
+    height: 60px;
+    border: 2px black solid;
+}
+
+.tutorial-bubble:after {
+    content: "";
+    display: block;
+    position: absolute;
+    right: -15px;
+    top: 8px;
+    width: 0;
+    border-width: 10px 0 10px 10px;
+    border-style: solid;
+    border-color: transparent black;
+}
+
+
 .userButton {
+    position: relative;
+    top: 0;
+    left: 0;
     height: 145px;
     width: 145px;
     border: 2px solid black;
