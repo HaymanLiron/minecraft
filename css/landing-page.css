@@ -22,7 +22,7 @@
     background-color: rgba(0,0,0,0.4) ;
     color: white;
     font-weight: bold;
-    font-family:"Minecraft Regular"
+    font-family:"Minecraft Regular",cursive,arial;
 }
 .mainTutorialDiv{
     border: 1px black solid;
@@ -32,8 +32,33 @@
     width:300px;
     position: absolute;
     top:50%;
-    left:50%;
+    left:80%;
     transform: translateY(-50%) translateX(-50%);
     display: none;
+    background-color:black ;
+    color: white;
+    font-weight: bold;
+    font-family: "Minecraft Regular",,cursive,arial;
+
+}
+#instructions{
+    height: 41px;
+    width: 121px;
+    position: absolute;
+    top: 15%;
+    left: 93%;
+    transform: translateX(-50%) translateY(-50%);
+    border-radius: 10px;
+    background-color: rgba(0,0,0,0.4);
+    color: white;
+    font-weight: bold;
+    font-family: "Minecraft Regular",cursive,arial;
+}
+.liste{
+    margin-top: 19%;
+
+}
+.instruction1{
+    margin-bottom: 15%;
 }
 
