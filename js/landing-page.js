@@ -11,7 +11,7 @@ $('.mainTutorialDiv').append(listOfInstructions);
 var instruction1 = $('<li/>');
 instruction1.addClass('instruction1');
 $(listOfInstructions).append(instruction1);
-instruction1.text("Select the tools that you want to use according to the following rules:  \nThe pickaxe can only remove : stone, \nThe axe can only remove : trunk and leaves, The shovel can only remove : grass and dirt");
+instruction1.text("Select the tools that you want to use according to the following rules:\n  \nThe pickaxe can only remove : stone \nThe axe can only remove : trunk and leaves \nThe shovel can only remove : grass and dirt");
 
 var instruction2 = $('<li/>');
 $(listOfInstructions).append(instruction2);
