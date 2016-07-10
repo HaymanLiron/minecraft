@@ -60,5 +60,6 @@
 }
 .instruction1{
     margin-bottom: 15%;
+    white-space: pre-line;
 }
 
