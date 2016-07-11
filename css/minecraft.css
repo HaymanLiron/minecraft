@@ -10,6 +10,7 @@
 
 .boardSquare {
     display: inline-block;
+    position: relative;
     height: 30px;
     width: 30px;
     margin-top: -3px;
@@ -19,19 +20,20 @@
 
 .tutorial-bubble {
     position: absolute;
-    right: 150px;
-    top: 50px;
-    width: 150px;
-    height: 60px;
+    background-color: lightgrey;
+    /*right and top are set dynamically dependent on the square that they are referencing */
+    width: 250px;
+    height: 95px;
     border: 2px black solid;
+    white-space: pre-line;
+    z-index: 1; /*need to make sure it always stays on top */
 }
-
 
 /* the way this works is that the corner of the borders
 gets equally divided between its two edges
 so we can abuse this to create triangles
 */
-.tutorial-bubble:after {
+.right:after {
     content: "";
     display: block;
     position: absolute;
@@ -64,6 +66,26 @@ so we can abuse this to create triangles
 
 .gray-background {
     background-color: lightgray;
+}
+
+.main-instructions-container {
+    display: none;
+    background-color: #5bc0de;
+    height: 200px;
+    width: 400px;
+}
+
+.relative {
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+.center-align {
+    position: absolute;
+    left:50%;
+    top:50%;
+    transform: translateX(-50%) translateY(-50%);
 }
 
 @media screen and (max-width: 768px){

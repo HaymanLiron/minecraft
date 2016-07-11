@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 
 </head>
-<body>
+<body class="relative">
 
 <div class="container-fluid">
     <div class="row">
@@ -17,6 +17,7 @@
         </div>
         <div class="col-lg-3">
             <button class="btn-lg" onclick="minecraft.runTutorial()">Tutorial</button>
+            <button class="btn-lg" onclick="minecraft.showInstructions()">Instructions</button>
         </div>
     </div>
 
@@ -26,6 +27,17 @@
         </div>
         <div class="userButtonContainer col-lg-3">
         </div>
+    </div>
+</div>
+
+
+<div id="instructionsModal" class="main-instructions-container center-align">
+    <div class="center-align">
+        Welcome to the game<br/>
+        Pickaxe works for stones<br/>
+        Spade works for dirt<br/>
+        Axe works for trees<br/>
+        <button onclick="minecraft.hideInstructions()">HIDE ME</button>
     </div>
 </div>
 

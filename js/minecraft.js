@@ -60,8 +60,54 @@ minecraft.userButtons = [
     }
 ];
 
+//array that contains information for tutorial instructions
+minecraft.tutorialInstructions = [
+    {
+        'instruction':'Select a pickaxe \n',
+        'whereToPlace': './images/pickaxe.png',
+        'arrowPlacement':"right"
+    },
+    {
+        'instruction':'Now you can use it on the rock \n',
+        'whereToPlace': minecraft.backgroundimages["rock"],
+        'arrowPlacement':"right"
+    },
+    {
+        'instruction':'You could also select an axe\n',
+        'whereToPlace': './images/axe.png',
+        'arrowPlacement':"right"
+    },
+    {
+        'instruction':'Axes don\'t work on dirt! \n',
+        'whereToPlace': minecraft.backgroundimages["dirt"],
+        'arrowPlacement':"right"
+    },
+    {
+        'instruction':'Best to only use them on trees! \n',
+        'whereToPlace': minecraft.backgroundimages["tree"],
+        'arrowPlacement':"right"
+    },
+    {
+        'instruction':'You can also use the last thing you removed! \n',
+        'whereToPlace': './images/axe.png',
+        'arrowPlacement':"right"
+    },
+    {
+        'instruction':'And place it anywhere on the board! \n',
+        'whereToPlace': minecraft.backgroundimages["sky"],
+        'arrowPlacement':"right"
+    }
+
+
+];
+
+
+
 //variable to know the last button the user has pressed
 minecraft.currentUserButton = "";
+
+
+
 
 minecraft.getSquareFeatureGivenImageURL= function(imageURL) {
     //this function finds the key in minecraft.backgroundimages for a given imageURL
@@ -179,11 +225,67 @@ minecraft.createButtons = function () {
     minecraft.currentUserButton = $(".userButtonContainer .userButton:last-child");
 };
 
+
+minecraft.hideInstructions = function () {
+    $("#instructionsModal").hide();
+};
+
+minecraft.showInstructions = function () {
+    $("#instructionsModal").show();
+};
+
+
+
+minecraft.createTutorialBubble = function (tutObj) {
+    //if there are no more instructions left, we want to tell the user they have finished the tutorial, and leave this function
+    if (minecraft.currentTutorialInstruction >= minecraft.tutorialInstructions.length){
+
+        return;
+    }
+
+    var whereToPlace = minecraft.getAllDivsWithBGImage("url(\"" + tutObj["whereToPlace"] + "\")").eq(0);
+    var rightAdj = whereToPlace.width() / 2;
+    // var topAdj = whereToPlace.height() / 2; //commented out because I don't think I need to change the height, but I have intentionally kept the functionality
+    var tutorialBubble = $("<div/>")
+        .text(tutObj["instruction"])
+        .addClass("tutorial-bubble")
+        .addClass(tutObj["arrowPlacement"])
+        //we need to customise the right: and left: css attributes so the bubble appears correctly
+        .css("right", "" + rightAdj + "px");
+        // .css("top", "" + topAdj + "px");
+
+
+    var nextStepButton = $("<button/>")
+        .text("Next step")
+        .on("click", function(){
+            tutorialBubble.hide();
+            minecraft.runTutorial();
+        });
+    var skipToGameButton = $("<button/>")
+        .text("Skip To Game")
+        .on("click", function(){
+            tutorialBubble.hide();
+        });
+    tutorialBubble
+        .append(nextStepButton)
+        .append(skipToGameButton);
+
+    whereToPlace.append(tutorialBubble);
+    minecraft.currentTutorialInstruction++;
+    return tutorialBubble;
+
+};
+
+minecraft.getAllDivsWithBGImage = function (BGImage) {
+    return $('div').filter(function(){
+        return this.style.backgroundImage === BGImage;
+    });
+};
+
+minecraft.currentTutorialInstruction = 0;
+
 minecraft.runTutorial = function () {
-    var tutorialBubble = $("<div/>");
-    tutorialBubble.text("Select a tool");
-    tutorialBubble.addClass("tutorial-bubble");
-    minecraft.currentUserButton.append(tutorialBubble);
+    minecraft.createTutorialBubble(minecraft.tutorialInstructions[minecraft.currentTutorialInstruction]);
 };
 
 minecraft.init = function(){
