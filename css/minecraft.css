@@ -18,6 +18,12 @@
     background-size: cover;
 }
 
+.boardSquare:hover {
+    border: 1px white solid;
+    opacity: 0.5;
+}
+
+
 .tutorial-bubble {
     position: absolute;
     background-color: lightgrey;

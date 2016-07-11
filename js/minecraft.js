@@ -310,6 +310,7 @@ minecraft.getAllDivsWithBGImage = function (BGImage) {
     });
 };
 
+//dont need this variable, could have given each tutorial step an attribute telling you what number in the tutorial it is
 minecraft.currentTutorialInstruction = 0;
 
 minecraft.runTutorial = function () {
