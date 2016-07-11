@@ -110,11 +110,8 @@ minecraft.tutorialInstructions = [
 
 ];
 
-
-
 //variable to know the last button the user has pressed
 minecraft.currentUserButton = "";
-
 
 minecraft.getSquareFeatureGivenImageURL= function(imageURL) {
     //this function finds the key in minecraft.backgroundimages for a given imageURL
@@ -124,6 +121,7 @@ minecraft.getSquareFeatureGivenImageURL= function(imageURL) {
             return keys;
         }
     }
+    //defensively return null if couldn't find this value in the object
     return null;
 };
 
@@ -192,16 +190,16 @@ minecraft.clickOnUserButton = function () {
 };
 
 minecraft.createBoard = function () {
-    //create the board by iterating through the predefined matrix
+    //create the board by iterating through the predefined matrix and adding divs to the HTML
     var boardContainer = $(".boardContainer");
     for (var i = 0; i < minecraft.board.length; i++) {
         for (var j = 0; j < minecraft.board[i].length; j++) {
             //create a div for the current square in the matrix
-            var boardSquare = $("<div/>");
-            boardSquare.on('click', minecraft.clickOnBoardSquare);
-            boardSquare.addClass("boardSquare");
-            boardSquare.data("squareFeature", minecraft.board[i][j]);
-            boardSquare.css("background-image", "url(" + minecraft.backgroundimages[minecraft.board[i][j]] + ")");
+            var boardSquare = $("<div/>")
+                .on('click', minecraft.clickOnBoardSquare)
+                .addClass("boardSquare")
+                .data("squareFeature", minecraft.board[i][j])
+                .css("background-image", "url(" + minecraft.backgroundimages[minecraft.board[i][j]] + ")");
             boardContainer.append(boardSquare);
         }
         //add new line so that next loop starts on new line
@@ -214,17 +212,18 @@ minecraft.createButtons = function () {
     for (var i = 0; i < minecraft.userButtons.length; i++) {
         //create a div, with appropriate background image
         //and data that tells you what the square works for
-        var userButton = $("<div/>");
-        userButton.on('click', minecraft.clickOnUserButton);
-        userButton.addClass("userButton");
-        userButton.attr("id", minecraft.userButtons[i]["toolName"]);
+        var userButton = $("<div/>")
+            .on('click', minecraft.clickOnUserButton)
+            .addClass("userButton")
+            .attr("id", minecraft.userButtons[i]["toolName"]);
         //iterate through keys and add this data to the HTML element
         for (var keys in minecraft.userButtons[i]) { //keys is the property of the object we are aiming
-
             //add the key and value as information that the HTML element holds
-            userButton.data(keys, minecraft.userButtons[i][keys]);
-
+            if (minecraft.userButtons[i].hasOwnProperty(keys)){ //ZVI I know this line is redundant but intelliJ keeps on giving me warnings without it, so I've kept it in
+                userButton.data(keys, minecraft.userButtons[i][keys]);
+            }
         }
+        //add appropriate background image to the button
         userButton.css("background-image", "url(" + minecraft.userButtons[i]["image"] + ")");
         $('.userButtonContainer').append(userButton);
     }
@@ -233,7 +232,7 @@ minecraft.createButtons = function () {
     minecraft.currentUserButton = $(".userButtonContainer .userButton:last-child");
 };
 
-
+//instructions are written in the HTML, and are shown/hidden in the following two functions
 minecraft.hideInstructions = function () {
     $("#instructionsModal").hide();
 };
@@ -242,48 +241,61 @@ minecraft.showInstructions = function () {
     $("#instructionsModal").show();
 };
 
-
-
-minecraft.createTutorialBubble = function (tutObj) {
-    //if there are no more instructions left, we want to tell the user they have finished the tutorial, and leave this function
-    if (minecraft.currentTutorialInstruction >= minecraft.tutorialInstructions.length){
-
-        return;
-    }
-    //find where to place
-    if (tutObj["hasID"]){
-        var whereToPlace = $("#" + tutObj["id"]);
-    } else {
-        whereToPlace = minecraft.getAllDivsWithBGImage("url(\"" + tutObj["whereToPlace"] + "\")").eq(0);
-    }
-
+function makeDivForTutorialBubble(whereToPlace, tutObj) {
     var rightAdj = whereToPlace.width() / 2;
-    // var topAdj = whereToPlace.height() / 2; //commented out because I don't think I need to change the height, but I have intentionally kept the functionality
-    var tutorialBubble = $("<div/>")
+    return $("<div/>")
         .text(tutObj["instruction"])
         .addClass("tutorial-bubble")
         .addClass(tutObj["arrowPlacement"])
-        //we need to customise the right: and left: css attributes so the bubble appears correctly
+        //we need to customise the right: css attributes so the bubble appears correctly
         .css("right", "" + rightAdj + "px");
-        // .css("top", "" + topAdj + "px");
+}
+
+minecraft.makeNextStepButton = function(tutorialBubble) {
+    var nextStepButton = $("<button/>")
+        .text("Next step")
+        .on("click", function () {
+            tutorialBubble.hide();
+            minecraft.runTutorial();
+        });
+    tutorialBubble.append(nextStepButton);
+};
+
+minecraft.makeSkipToGameButton = function(tutorialBubble) {
+    var skipToGameButton = $("<button/>")
+        .text("Skip To Game")
+        .on("click", function () {
+            tutorialBubble.hide();
+            //reset the tutorial in case user wants to go to it again!
+            minecraft.currentTutorialInstruction = 0;
+        });
+    tutorialBubble.append(skipToGameButton);
+};
+
+minecraft.createTutorialBubble = function (tutObj) {
+    //this function is used to create a bubble that contains information to guide the user through the tutorial
+    //tutorial instructions are an Array of objects as defined above, and the idea of the tutorial is to iterate through each element of that array,
+    //guiding the user
+
+    //if there are no more instructions left, the user has finished the tutorial, and we leave this function
+    if (minecraft.currentTutorialInstruction >= minecraft.tutorialInstructions.length){
+        return;
+    }
+    //find where to place
+    //if the element to place it on has an ID, we place it there, otherwise we search for an appropriate element based on the appropriate background image
+    if (tutObj["hasID"]){
+        var whereToPlace = $("#" + tutObj["id"]);
+    } else {
+        //we only bother taking the first appropriate element
+        whereToPlace = minecraft.getAllDivsWithBGImage("url(\"" + tutObj["whereToPlace"] + "\")").eq(0);
+    }
+    var tutorialBubble = makeDivForTutorialBubble(whereToPlace, tutObj);
 
     //we only want a nextStepButton if it's not the last instruction
     if (minecraft.currentTutorialInstruction < minecraft.tutorialInstructions.length - 1){
-        var nextStepButton = $("<button/>")
-            .text("Next step")
-            .on("click", function(){
-                tutorialBubble.hide();
-                minecraft.runTutorial();
-            });
-        tutorialBubble.append(nextStepButton);
-
+        minecraft.makeNextStepButton(tutorialBubble);
     }
-    var skipToGameButton = $("<button/>")
-        .text("Skip To Game")
-        .on("click", function(){
-            tutorialBubble.hide();
-        });
-        tutorialBubble.append(skipToGameButton);
+    minecraft.makeSkipToGameButton(tutorialBubble);
 
     whereToPlace.append(tutorialBubble);
     minecraft.currentTutorialInstruction++;
@@ -292,6 +304,7 @@ minecraft.createTutorialBubble = function (tutObj) {
 };
 
 minecraft.getAllDivsWithBGImage = function (BGImage) {
+    //searches for all divs with the given background Image, used in the createTutorialButton function
     return $('div').filter(function(){
         return this.style.backgroundImage === BGImage;
     });
