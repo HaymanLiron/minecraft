@@ -64,40 +64,49 @@ minecraft.userButtons = [
 minecraft.tutorialInstructions = [
     {
         'instruction':'Select a pickaxe \n',
-        'whereToPlace': './images/pickaxe.png',
+        'whereToPlace': '',
+        'hasID':true,
+        'id':"pickAxe",
         'arrowPlacement':"right"
     },
     {
         'instruction':'Now you can use it on the rock \n',
         'whereToPlace': minecraft.backgroundimages["rock"],
+        'hasID':false,
         'arrowPlacement':"right"
     },
     {
         'instruction':'You could also select an axe\n',
-        'whereToPlace': './images/axe.png',
+        'whereToPlace': '',
+        'hasID':true,
+        'id':"axe",
         'arrowPlacement':"right"
     },
     {
         'instruction':'Axes don\'t work on dirt! \n',
         'whereToPlace': minecraft.backgroundimages["dirt"],
+        'hasID':false,
         'arrowPlacement':"right"
     },
     {
         'instruction':'Best to only use them on trees! \n',
         'whereToPlace': minecraft.backgroundimages["tree"],
+        'hasID':false,
         'arrowPlacement':"right"
     },
     {
         'instruction':'You can also use the last thing you removed! \n',
         'whereToPlace': './images/axe.png',
+        'hasID':true,
+        'id':"lastUsed",
         'arrowPlacement':"right"
     },
     {
         'instruction':'And place it anywhere on the board! \n',
         'whereToPlace': minecraft.backgroundimages["sky"],
+        'hasID':false,
         'arrowPlacement':"right"
     }
-
 
 ];
 
@@ -105,8 +114,6 @@ minecraft.tutorialInstructions = [
 
 //variable to know the last button the user has pressed
 minecraft.currentUserButton = "";
-
-
 
 
 minecraft.getSquareFeatureGivenImageURL= function(imageURL) {
@@ -210,6 +217,7 @@ minecraft.createButtons = function () {
         var userButton = $("<div/>");
         userButton.on('click', minecraft.clickOnUserButton);
         userButton.addClass("userButton");
+        userButton.attr("id", minecraft.userButtons[i]["toolName"]);
         //iterate through keys and add this data to the HTML element
         for (var keys in minecraft.userButtons[i]) { //keys is the property of the object we are aiming
 
@@ -242,8 +250,13 @@ minecraft.createTutorialBubble = function (tutObj) {
 
         return;
     }
+    //find where to place
+    if (tutObj["hasID"]){
+        var whereToPlace = $("#" + tutObj["id"]);
+    } else {
+        whereToPlace = minecraft.getAllDivsWithBGImage("url(\"" + tutObj["whereToPlace"] + "\")").eq(0);
+    }
 
-    var whereToPlace = minecraft.getAllDivsWithBGImage("url(\"" + tutObj["whereToPlace"] + "\")").eq(0);
     var rightAdj = whereToPlace.width() / 2;
     // var topAdj = whereToPlace.height() / 2; //commented out because I don't think I need to change the height, but I have intentionally kept the functionality
     var tutorialBubble = $("<div/>")
@@ -254,21 +267,23 @@ minecraft.createTutorialBubble = function (tutObj) {
         .css("right", "" + rightAdj + "px");
         // .css("top", "" + topAdj + "px");
 
+    //we only want a nextStepButton if it's not the last instruction
+    if (minecraft.currentTutorialInstruction < minecraft.tutorialInstructions.length - 1){
+        var nextStepButton = $("<button/>")
+            .text("Next step")
+            .on("click", function(){
+                tutorialBubble.hide();
+                minecraft.runTutorial();
+            });
+        tutorialBubble.append(nextStepButton);
 
-    var nextStepButton = $("<button/>")
-        .text("Next step")
-        .on("click", function(){
-            tutorialBubble.hide();
-            minecraft.runTutorial();
-        });
+    }
     var skipToGameButton = $("<button/>")
         .text("Skip To Game")
         .on("click", function(){
             tutorialBubble.hide();
         });
-    tutorialBubble
-        .append(nextStepButton)
-        .append(skipToGameButton);
+        tutorialBubble.append(skipToGameButton);
 
     whereToPlace.append(tutorialBubble);
     minecraft.currentTutorialInstruction++;
