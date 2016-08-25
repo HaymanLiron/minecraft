@@ -255,7 +255,7 @@ minecraft.makeNextStepButton = function(tutorialBubble) {
     var nextStepButton = $("<button/>")
         .text("Next step")
         .on("click", function () {
-            tutorialBubble.hide();
+            tutorialBubble.remove();
             minecraft.runTutorial();
         });
     tutorialBubble.append(nextStepButton);
@@ -265,8 +265,9 @@ minecraft.makeSkipToGameButton = function(tutorialBubble) {
     var skipToGameButton = $("<button/>")
         .text("Skip To Game")
         .on("click", function () {
-            tutorialBubble.hide();
+            tutorialBubble.remove();
             //reset the tutorial in case user wants to go to it again!
+
             minecraft.currentTutorialInstruction = 0;
         });
     tutorialBubble.append(skipToGameButton);
@@ -277,10 +278,16 @@ minecraft.createTutorialBubble = function (tutObj) {
     //tutorial instructions are an Array of objects as defined above, and the idea of the tutorial is to iterate through each element of that array,
     //guiding the user
 
+    
     //if there are no more instructions left, the user has finished the tutorial, and we leave this function
     if (minecraft.currentTutorialInstruction >= minecraft.tutorialInstructions.length){
         return;
     }
+    //if there is already a tutorial modal open, don't open another one
+    if ($(".tutorial-bubble").length > 0) {
+        return;
+    }
+
     //find where to place
     //if the element to place it on has an ID, we place it there, otherwise we search for an appropriate element based on the appropriate background image
     if (tutObj["hasID"]){

@@ -1,4 +1,4 @@
-.body, p {
+body, p {
     margin: 0;
     padding: 0;
     border: 0;
@@ -17,12 +17,6 @@
     margin-bottom: -3px;
     background-size: cover;
 }
-
-.boardSquare:hover {
-    border: 1px white solid;
-    opacity: 0.5;
-}
-
 
 .tutorial-bubble {
     position: absolute;
@@ -50,7 +44,6 @@ so we can abuse this to create triangles
     border-style: solid;
     border-color: transparent black; /*top and bottom border are transparent, left and right are black*/
 }
-
 
 .userButton {
     position: relative;
@@ -104,5 +97,4 @@ so we can abuse this to create triangles
         height:60px;
         width: 60px;
     }
-
 }
